@@ -17,11 +17,15 @@ from django.contrib import admin
 from django.urls import path,re_path,include
 from django.conf import settings
 from django.conf.urls.static import static
+from crop_data.views import CropView
+from fertilizer_data.views import FertilizerView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     re_path(r'^auth/', include('djoser.urls')),
     re_path(r'^auth/', include('djoser.urls.authtoken')),
+    re_path(r'^crop/', CropView.as_view()),
+    re_path(r'^fertilizer/', FertilizerView.as_view()),
 ]
 
 

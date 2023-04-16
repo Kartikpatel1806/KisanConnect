@@ -47,6 +47,8 @@ INSTALLED_APPS = [
 
     # local apps
     'authentication',
+    'crop_data',
+    'fertilizer_data',
 ]
 
 MIDDLEWARE = [

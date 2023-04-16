@@ -177,7 +177,8 @@ export default {
             this.$router.push("/auth");
           })
           .catch((error) => {
-            alert(error);
+            console.log(error.request.response);
+            alert(error.request.response);
             this.errored = true;
           });
 
