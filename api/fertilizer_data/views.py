@@ -14,7 +14,7 @@ import numpy as np
 
 def recommendation(t_params,h_params,sm_params,soil_type,crop_type,n_params,p_params,k_params):
     try:
-        data = pd.read_csv("fertilizer_recommendation.csv")
+        data = pd.read_csv('api\\fertilizer_data\\fertilizer_recommendation.csv')
         le_soil = LabelEncoder()
         data['Soil Type'] = le_soil.fit_transform(data['Soil Type'])
         le_crop = LabelEncoder()

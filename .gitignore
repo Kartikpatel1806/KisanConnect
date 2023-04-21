@@ -16,5 +16,7 @@ pip-selfcheck.json
 /api/crop_data/migrations/__pycache__
 /api/fertilizer_data/__pycache__
 /api/fertilizer_data/migrations/__pycache__
+/api/yeild/__pycache__
+/api/yeild/migrations/__pycache__
 /web_03/node_modules
 /web_03/node_modules
