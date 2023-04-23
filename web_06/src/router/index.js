@@ -9,10 +9,28 @@ import ForgotPassword from '../components/auth/forgot_password.vue'
 import ChangePassword from '../components/auth/change_password.vue'
 import ResetPassword from '../components/auth/reset_password.vue'
 import MyAccount from '../views/MyAccount.vue'
+import Crop from '../components/crop/CropData.vue'
+import Fertilizer from '../components/fertilizer/FertilizerData.vue'
+import Yield from '../views/PostView.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/yield',
+    name: 'Post Yield',
+    component: Yield
+  },
+  {
+    path: '/fertilizer',
+    name: 'Fertilizer',
+    component: Fertilizer
+  },
+  {
+    path: '/crop',
+    name: 'Crop',
+    component: Crop
+  },
   {
     path: '/',
     name: 'home',

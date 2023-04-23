@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'authentication',
     'crop_data',
     'fertilizer_data',
+    'yield_data',
 ]
 
 MIDDLEWARE = [

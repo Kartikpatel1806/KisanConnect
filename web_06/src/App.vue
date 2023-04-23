@@ -14,28 +14,39 @@
             />
 
             <v-card-text>
-              <h1 class="appname"> Firtilize.io </h1>
+              <h1 class="appname">Firtilize.io</h1>
             </v-card-text>
           </div>
 
           <v-spacer></v-spacer>
 
           <div v-if="isDisabled">
-            <v-btn to="/" class="ma-1" color="#6495ED">
-              Home
+            <v-btn to="/" class="ma-1" color="#6495ED"> Home </v-btn>
+            <v-btn to="/crop" class="ma-1" color="#6495ED">
+              Crop Recommendation
             </v-btn>
+            <v-btn to="/fertilizer" class="ma-1" color="#6495ED">
+              Fertilizer Recommendation
+            </v-btn>
+            <v-btn to="/yield" class="ma-1" color="#6495ED"> yield Data </v-btn>
             <v-btn to="/account" class="ma-1" color="#6495ED">
               My Account
             </v-btn>
           </div>
           <v-btn to="/auth" class="ma-1" color="#6495ED" v-else> Login </v-btn>
-        </v-app-bar> 
+        </v-app-bar>
       </div>
       <v-main>
         <router-view> </router-view>
-
       </v-main>
-      <v-footer app bottom fixed class="justify-center" color="#292929" height="100">
+      <v-footer
+        app
+        bottom
+        fixed
+        class="justify-center"
+        color="#292929"
+        height="100"
+      >
         <div
           class="title font-weight-light grey--text text--lighten-1 text-center"
         >
@@ -52,22 +63,19 @@ import Vue from "vue";
 
 export default {
   name: "App",
-  components: {
-  },
+  components: {},
 
-  data: () => ({
-  }),
+  data: () => ({}),
   computed: {
     isDisabled() {
       return Vue.$cookies.isKey("token");
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style>
-
-.appname{
+.appname {
   padding-top: 20px;
   font-size: 20px;
   color: black;
@@ -131,19 +139,19 @@ p {
 .education-section:last-child {
   margin-bottom: 0;
 }
-.chart{
+.chart {
   text-align: center;
   font-size: 12px;
   padding: 0px;
   margin: 0px;
 }
-.dates{
+.dates {
   margin: 0 0 1em 0;
   line-height: 22px;
   letter-spacing: 0px;
   font-size: 14px;
   font-weight: 900;
   text-transform: uppercase;
-  color: #87CEEB;
+  color: #87ceeb;
 }
 </style>

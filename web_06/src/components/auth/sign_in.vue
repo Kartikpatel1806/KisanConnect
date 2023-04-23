@@ -2,7 +2,7 @@
   <div>
     <v-parallax
       dark
-      src="https://img.freepik.com/free-vector/nature-scene-with-river-hills-forest-mountain-landscape-flat-cartoon-style-illustration_1150-37326.jpg?w=1380&t=st=1678963146~exp=1678963746~hmac=bd54cafbc3035c0c91fa23e493dd05970be4eca63f1aa1bbe7d6c63db7143af5"
+      src="https://cdn.vuetifyjs.com/images/parallax/material2.jpg"
     >
       <v-row align="center" justify="center">
         <v-col class="text-center" cols="12">
