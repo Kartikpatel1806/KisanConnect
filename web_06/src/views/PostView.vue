@@ -1,8 +1,10 @@
 <template>
   <v-container fluid>
-    <v-btn dark text color="primary" class="ml-2" @click="CreatePost()">
-      Post Yield
-    </v-btn>
+    <div v-if="role == 'farmer'">
+      <v-btn dark text color="primary" class="ml-2" @click="CreatePost()">
+        Post Yield
+      </v-btn>
+    </div>
 
     <v-container>
       <template>
@@ -28,11 +30,6 @@
                         label="Discription"
                         type="text"
                       ></v-textarea>
-
-                      <!-- <v-checkbox
-                        v-model="is_sold"
-                        :label="`Sold: ${is_sold.toString() == 'true'}`"
-                      ></v-checkbox> -->
                     </v-col>
                   </v-row>
                 </v-container>
@@ -65,29 +62,33 @@
               </v-card-title>
               <v-card-text>
                 <v-container>
+                  <v-virtual-scroll
+                :items="datas"
+                item-height="80"
+                height="300"
+              >
+                <template v-slot:default="{ item }">
+                  <div class="pa-10">
+                    <v-textarea
+                      :bench="benched"
+                      :value="item.query"
+                      :label="item.user_name"
+                      outlined
+                      readonly
+                      auto-grow
+                      rows="1"
+                      prepend-icon="mdi-account"
+                    >
+                    </v-textarea>
+                  </div>
+                </template>
+                  </v-virtual-scroll>
                   <v-row>
-                    <v-col v-for="data in datas" :key="data.id">
-                      <v-text-field
-                        :value="data.query"
-                        :label="data.user_name"
-                        type="text"
-                        readonly
-                        filled
-                        outlined
-                        prepend-icon="mdi-comment"
-                        auto-grow
-                        rows="1"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col>
-                      <v-text-field
-                        v-model="query"
-                        label="Ask Query"
-                        type="text"
-                      ></v-text-field>
-                    </v-col>
+                    <v-text-field
+                      v-model="query"
+                      label="Ask Query"
+                      type="text"
+                    ></v-text-field>
                   </v-row>
                 </v-container>
                 <small>*indicates required field</small>
@@ -167,11 +168,6 @@
                   >
                     <br />
                     <p>{{ item.description }}</p>
-                    <!-- <br />
-                    <p>{{ item.weight }} KG</p>
-                    <br />
-                    <p>Expiry Date {{ item.expires_at }}</p>
-                    <br />  -->
 
                     <div v-if="!item.is_sold">
                       <v-btn text color="error" @click="ChatDialog(item.id)">
@@ -270,6 +266,12 @@ export default {
       query: "",
       uid: "",
       datas: "",
+      role: Vue.$cookies.get("role"),
+      
+    hint: [],
+    iconIndex: 0,
+    benched: 0,
+    messages_data: null,
     };
   },
   computed: {
@@ -336,7 +338,7 @@ export default {
       })
         .then((res) => {
           console.log(res);
-          alert(res.data);
+          alert("Thanks for your query!");
           window.location.reload();
         })
         .catch((error) => {

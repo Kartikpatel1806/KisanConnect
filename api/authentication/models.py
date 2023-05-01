@@ -24,10 +24,16 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
         
 
+ROLE = (
+    ('farmer', 'Farmer'),
+    ('customer', 'Customer'),
+)
+
 class UserModel(AbstractUser):
     username        = None
     email           = models.EmailField(verbose_name="Email", unique=True, max_length=255)
     name            = models.CharField(verbose_name="Name", max_length=255, null=True, blank=True)
+    role            = models.CharField(verbose_name="Role", choices=ROLE,max_length=255, null=True, blank=True)
     objects         = CustomUserManager()
 
     USERNAME_FIELD = 'email'

@@ -47,6 +47,16 @@
         color="#292929"
         height="100"
       >
+        <v-btn
+          fab
+          color="cyan accent-2"
+          top
+          right
+          absolute
+          @click="dialog = !dialog"
+        >
+          <v-icon>mdi-message</v-icon>
+        </v-btn>
         <div
           class="title font-weight-light grey--text text--lighten-1 text-center"
         >
@@ -55,22 +65,181 @@
         </div>
       </v-footer>
     </div>
+
+    <v-container>
+      <template>
+        <v-row justify="center">
+          <v-dialog v-model="dialog" persistent max-width="600px">
+            <v-card>
+              <v-card-title>
+                <span class="text-h5">Firtilize.io ChatBot</span>
+              </v-card-title>
+              <v-card-text>
+                <v-container>
+                  <v-virtual-scroll
+                :items="messages_data"
+                item-height="200"
+                height="400"
+              >
+                <template v-slot:default="{ item }">
+                  <div class="pa-10">
+                    <v-textarea
+                      :bench="benched"
+                      :value="item.query"
+                      :label="item.user_name"
+                      outlined
+                      readonly
+                      auto-grow
+                      rows="1"
+                      prepend-icon="mdi-account"
+                    >
+                    </v-textarea>
+                    <v-textarea
+                      :value="item.answer"
+                      label="BOT"
+                      outlined
+                      readonly
+                      auto-grow
+                      rows="2"
+                      prepend-icon="mdi-robot-outline"
+                    >
+                    </v-textarea>
+                  </div>
+                </template>
+              </v-virtual-scroll>
+                  <v-row>
+                    <v-col>
+                      <v-textarea
+                        auto-grow
+                        rows="1"
+                        v-model="question"
+                        :append-outer-icon="
+                          question ? 'mdi-send' : 'mdi-message'
+                        "
+                        :prepend-icon="icon"
+                        filled
+                        clear-icon="mdi-close-circle"
+                        clearable
+                        label="Message"
+                        type="text"
+                        @click:append-outer="sendMessage"
+                        @click:prepend="changeIcon"
+                        @click:clear="clearMessage"
+                      ></v-textarea>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="dialog = false">
+                  Close
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-row>
+      </template>
+    </v-container>
   </v-app>
 </template>
 
 <script>
 import Vue from "vue";
+import axios from "axios";
 
 export default {
   name: "App",
   components: {},
 
-  data: () => ({}),
+  data: () => ({
+    dialog: false,
+    question: "",
+    token: Vue.$cookies.get("token"),
+    message: "",
+    hint: [],
+    iconIndex: 0,
+    benched: 0,
+    messages_data: null,
+  }),
   computed: {
     isDisabled() {
       return Vue.$cookies.isKey("token");
     },
+    items() {
+      return Array.from({ length: this.length }, (k, v) => v + 1);
+    },
+    length() {
+      return 7000;
+    },
   },
+
+  mounted() {
+    this.GetMessage();
+  },
+
+  methods: {
+    GetMessage() {
+      axios({
+        method: "GET",
+        url: "http://127.0.0.1:8000/chatbot/",
+        data: JSON.stringify({}),
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+          Authorization: `token ${this.token}`,
+        },
+      })
+        .then((res) => {
+          this.messages_data = res.data;
+          console.log(this.messages_data);
+        })
+        .catch((error) => {
+          alert(error);
+          this.errored = true;
+        });
+    },
+
+
+    sendMessage() {
+      this.SendMessage();
+      this.resetIcon();
+      this.clearMessage();
+    },
+    clearMessage() {
+      this.message = "";
+    },
+    resetIcon() {
+      this.iconIndex = 0;
+    },
+    changeIcon() {
+      this.iconIndex === this.icons.length - 1
+        ? (this.iconIndex = 0)
+        : this.iconIndex++;
+    },
+
+    SendMessage() {
+      axios({
+        method: "POST",
+        url: "http://127.0.0.1:8000/chatbot/",
+        data: {
+          question: this.question,
+        },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `token ${this.token}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          alert("Thanks for you query!");
+          window.location.reload();
+        })
+        .catch((error) => {
+          alert(error.response.data);
+          this.errored = true;
+        });
+    },
+  }
 };
 </script>
 

@@ -5,6 +5,9 @@ from rest_framework import status
 from rest_framework import authentication, permissions
 from django.contrib.auth.models import User
 from .serializers import *
+import pickle, json, os
+from tensorflow import keras
+import numpy as np
 
 
 class YieldView(APIView):
@@ -40,7 +43,7 @@ class YieldView(APIView):
         
 
 
-class BotView(APIView):
+class QueryView(APIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
@@ -55,7 +58,7 @@ class BotView(APIView):
             data['query'] = query
             data['yield_data'] = yield_id
             data['user'] = request.user.pk
-            serializer = BotSerializer(data=data)
+            serializer = QuerySerializer(data=data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -66,8 +69,69 @@ class BotView(APIView):
     def get(self,request,format=None):
         try:
             id = request.GET.get('id')
-            data = Bot.objects.filter(yield_data=id).order_by('id')
-            serializer = GetBotSerializer(instance=data, many=True)
+            data = Query.objects.filter(yield_data=id).order_by('id')
+            serializer = GetQuerySerializer(instance=data, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response(e, status=status.HTTP_400_BAD_REQUEST)
+        
+
+def chat(inp):
+    model = keras.models.load_model('chat_model')
+    dir = os.getcwd()
+    dir = dir + "/api/yield_data/intents.json"
+    print(dir)
+    with open(dir) as file:
+        data = json.load(file)
+
+    response = ""
+    with open('tokenizer.pickle', 'rb') as handle:
+        tokenizer = pickle.load(handle)
+    with open('label_encoder.pickle', 'rb') as enc:
+        lbl_encoder = pickle.load(enc)
+    max_len = 20
+    
+    while True:
+        result = model.predict(keras.preprocessing.sequence.pad_sequences(tokenizer.texts_to_sequences([inp]),
+                                             truncating='post', maxlen=max_len))
+        tag = lbl_encoder.inverse_transform([np.argmax(result)])
+        for i in data['intents']:
+            if i['tag'] == tag:
+                response = str(np.random.choice(i['responses']))
+        if response:
+            return True, response
+        else:
+            return False, None
+
+class ChatBotView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self,request,format=None):
+        try:
+            request_data = request.data
+            question = request_data['question'].strip().lower()
+            if len(question) <= 0:
+                return Response("Question can not be empty", status=status.HTTP_400_BAD_REQUEST)
+            is_valid, answer = chat(question)
+            if not is_valid:
+                return Response("I didn't get your query!", status=status.HTTP_400_BAD_REQUEST)
+            qna_data = {}
+            qna_data['query'] = question
+            qna_data['answer'] = answer
+            qna_data['user'] = request.user.pk
+            qna_data = ChatBotSerializer(data=qna_data)
+            if qna_data.is_valid():
+                qna_data.save()
+                return Response(qna_data.data, status=status.HTTP_201_CREATED)
+            return Response(qna_data.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response(e, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self,request,format=None):
+        try:
+            data = ChatBot.objects.filter(user_id=request.user.pk).order_by('id')
+            serializer = GetChatBotSerializer(instance=data, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response("sorry you don't have access", status=status.HTTP_400_BAD_REQUEST)

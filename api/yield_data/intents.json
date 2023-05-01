@@ -1,0 +1,164 @@
+{
+    "intents": [
+        {
+            "tag": "greeting",
+            "patterns": [
+                "Hi",
+                "Hey",
+                "Is anyone there?",
+                "Hello",
+                "Hay"
+            ],
+            "responses": [
+                "Hello",
+                "Hi",
+                "Hi there"
+            ]
+        },
+        {
+            "tag": "goodbye",
+            "patterns": [
+                "Bye",
+                "See you later",
+                "Goodbye"
+            ],
+            "responses": [
+                "See you later",
+                "Have a nice day",
+                "Bye! Come back again"
+            ]
+        },
+        {
+            "tag": "thanks",
+            "patterns": [
+                "Thanks",
+                "Thank you",
+                "That's helpful",
+                "Thanks for the help"
+            ],
+            "responses": [
+                "Happy to help!",
+                "Any time!",
+                "My pleasure",
+                "You're most welcome!"
+            ]
+        },
+        {
+            "tag": "crop",
+            "patterns": [
+                "What type of crops do you want to grow"
+            ],
+            "responses": [
+                "currently we have a crop of rice, maize, chickpea, kidneybeans, pigeonpeas, mothbeans, pomegranate, banana and so on..."
+            ]
+        },
+        {
+            "tag": "land",
+            "patterns": [
+                "What is the size of your farming land"
+            ],
+            "responses": [
+                "we have 2.28 acres of land"
+            ]
+        },
+        {
+            "tag": "irrigation",
+            "patterns": [
+                "What is your preferred irrigation system"
+            ],
+            "responses": [
+                "Drip irrigation is known to be the most efficient irrigation methods with 95-100% water use efficiency. This is compared to sprinkler systems that have 80-85% water use efficiency or flood and furrow that are 60-70% efficient."
+            ]
+        },
+        {
+            "tag": "weather",
+            "patterns": [
+                "What is the weather like in your area"
+            ],
+            "responses": [
+                "Many crops require rain to grow. Rain clears away the nutrients in the soil. No worries!"
+            ]
+        },
+        {
+            "tag": "diseases",
+            "patterns": [
+                "Do you have any specific pests or diseases you are concerned about"
+            ],
+            "responses": [
+                "The creatures that we call pests and the organisms that cause disease only become 'pest and diseases' when their activities start to damage crops and affect yields."
+            ]
+        },
+        {
+            "tag": "equipment",
+            "patterns": [
+                "What is  budget for farming equipment and supplies"
+            ],
+            "responses": [
+                "Using various sources of farm management data, a commonly used crop machinery investment per acre benchmark is a value below Rs.50,000 per acre."
+            ]
+        },
+        {
+            "tag": "experience",
+            "patterns": [
+                "What is your level of experience with farming"
+            ],
+            "responses": [
+                "Professional farmers do not have set educational requirements. However, if you wish to own your own farm or manage a farm, you may benefit from earning an associate degree or bachelor's degree in agricultural sciences, farm business, sustainability or botany."
+            ]
+        },
+        {
+            "tag": "time",
+            "patterns": [
+                "How much time can you dedicate to your farm on a daily basis"
+            ],
+            "responses": [
+                "We work at least 40 hours per week and are glad for it."
+            ]
+        },
+        {
+            "tag": "organic",
+            "patterns": [
+                "Are you interested in using organic farming methods"
+            ],
+            "responses": [
+                "Yes, It helps to maintain environment health by reducing the level of pollution. The principal methods of organic farming include crop rotation, green manures and compost, biological pest control, and mechanical cultivation."
+            ]
+        },
+        {
+            "tag": "remote",
+            "patterns": [
+                "Can I use this application in remote areas with low accessibility"
+            ],
+            "responses": [
+                "Yes, you can use it."
+            ]
+        },
+        {
+            "tag": "account",
+            "patterns": [
+                "How do I log into MyAccount"
+            ],
+            "responses": [
+                "Just simply login with your credentials or signup if you don't have an account."
+            ]
+        },
+        {
+            "tag": "account",
+            "patterns": [
+                "What kind of farming support [financial, community, risk management, locating market opportunities, food safety, mentorship/apprenticeship] do you receive on a regular basis"
+            ],
+            "responses": [
+                "We are giving support as financial, community, risk management, food safety, mentorship/apprenticeship on regular basis."
+            ]
+        },
+        {
+            "tag": "assistance",
+            "patterns": [
+                "Where do you seek assistance from (financial, farming-related questions, troubleshooting)"
+            ],
+            "responses": [
+                "I personally get help from google, quora magazine articles and news."
+            ]
+        }
+    ]
+}

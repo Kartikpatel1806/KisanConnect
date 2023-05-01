@@ -15,12 +15,22 @@ class YieldData(models.Model):
         return str(f"{self.user.name}")
     
 
-class Bot(models.Model):
+class Query(models.Model):
     user            = models.ForeignKey(User, on_delete=models.CASCADE)
     yield_data      = models.ForeignKey(YieldData, on_delete=models.CASCADE)
     query           = models.TextField(verbose_name="Query",blank=True,null=True)
     created_at      = models.DateField(auto_now_add=True, null=True, blank=True)
 
+
+    def __str__(self):
+        return str(f"{self.user.name}")
+    
+
+class ChatBot(models.Model):
+    user            = models.ForeignKey(User, on_delete=models.CASCADE)
+    query    = models.TextField(verbose_name="Query",blank=True,null=True)
+    answer      = models.TextField(verbose_name="Answer",blank=True,null=True)
+    created_at      = models.DateField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
         return str(f"{self.user.name}")

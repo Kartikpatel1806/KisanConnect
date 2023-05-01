@@ -21,6 +21,7 @@
             <v-theme-provider dark>
               <div>
                 <p>Email: {{ user.email }}</p>
+                <p>Role: {{ user.role }}</p>
               </div>
             </v-theme-provider>
 
@@ -43,8 +44,9 @@ export default {
     first_name: "",
     last_name: "",
     email: "",
-    users: [],
+    users: "",
     token: Vue.$cookies.get("token"),
+    role: Vue.$cookies.get("role"),
   }),
 
   computed: {
@@ -68,7 +70,7 @@ export default {
     Account() {
       axios({
         method: "GET",
-        url: "http://127.0.0.1:8000/auth/users/me/",
+        url: "http://127.0.0.1:8000/user/",
         data: JSON.stringify({}),
         headers: {
           "Content-Type": "application/json; charset=UTF-8",
@@ -76,9 +78,9 @@ export default {
         },
       })
         .then((res) => {
-          this.users.push(res.data)
-          console.log(this.users);
-          localStorage.setItem("app_id", res.data.id)
+          this.users = (res.data)
+          console.log(this.users[0].role);
+          Vue.$cookies.set("role", this.users[0].role);
         })
         .catch((error) => {
           alert(error);

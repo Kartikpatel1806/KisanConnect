@@ -66,6 +66,19 @@
                   />
                 </ValidationProvider>
 
+                <ValidationProvider>
+                <v-combobox
+                  outlined
+                  shaped
+                  v-model="role"
+                  :items="role_items"
+                  item-text="value"
+                  item-value="key"
+                  label="Role"
+                  prepend-icon="mdi-note"
+                ></v-combobox>
+                </ValidationProvider>
+
                 <ValidationProvider
                   name="Password"
                   rules="required|min:8"
@@ -142,6 +155,12 @@ export default {
     show1: false,
     show2: false,
     is_valid: false,
+    role: { key: null, value: null },
+    role_items: [
+      { key: "farmer", value: "Farmer" },
+      { key: "customer", value: "Customer" },
+    ],
+
   }),
 
   methods: {
@@ -162,9 +181,10 @@ export default {
 
         axios({
           method: "POST",
-          url: "http://127.0.0.1:8000/auth/users/",
+          url: "http://127.0.0.1:8000/user/",
           data: JSON.stringify({
             email: this.email,
+            role: this.role,
             name: this.fullName,
             password: this.password,
           }),
