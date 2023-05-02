@@ -47,7 +47,7 @@
           ></v-progress-linear>
         </template>
 
-        <v-card-title class="justify-center">Crop Recommendation</v-card-title>
+        <v-card-title class="justify-center">Fertilizer Recommendation</v-card-title>
 
         <v-card-text>
           <template>
@@ -143,11 +143,11 @@
                   ></v-select>
                 </ValidationProvider>
 
-                <ValidationProvider name="Crop Type" rules="required|max:9">
+                <ValidationProvider name="Crop Type" rules="required|max:20">
                   <v-select
                     :items="crop_item"
                     v-model="crop_type"
-                    :counter="9"
+                    :counter="20"
                     label="Crop Type"
                     required
                     dense
@@ -220,6 +220,7 @@ export default {
       "Millets",
       "Oil seeds",
       "Pulses",
+      "Ground Nuts",
     ],
     token: Vue.$cookies.get("token"),
   }),
@@ -255,7 +256,7 @@ export default {
         })
           .then((res) => {
             console.log(res);
-            alert("Car Mileage Predicted Successfully!");
+            alert("Predicted Successfully!");
             window.location.reload();
           })
           .catch((error) => {
