@@ -3,9 +3,9 @@ from djoser.serializers import UserCreateSerializer as BaseUserRegistrationSeria
         
 class UserSerializer(BaseUserRegistrationSerializer):
     class Meta(BaseUserRegistrationSerializer.Meta):
-        fields = ('id','email','role','name','password', 'password',)
+        fields = ('id','email','role','name','is_active','is_kyc','password', 'password',)
 
 
 class SuperUserSerializer(BaseUserRegistrationSerializer):
     class Meta(BaseUserRegistrationSerializer.Meta):
-        fields = ('id','email','role','name','password', 'is_staff', 'is_superuser',)
+        fields = ('id','email','role','name','password','is_active','is_kyc','is_staff','is_superuser',)

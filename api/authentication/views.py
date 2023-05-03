@@ -70,6 +70,19 @@ class UserView(APIView):
         except Exception as e:
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
         
+
+    def put(self,request,format=None):
+        try:
+            user = UserModel.objects.get(id=request.auth.user.pk)
+            request_data = request.data
+            user_id = request_data['id']
+            user = UserModel.objects.get(id=user_id)
+            user.is_kyc = True
+            user.delete()
+            return Response("Successfully deleted!", status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
+        
     
     def delete(self,request,format=None):
         try:

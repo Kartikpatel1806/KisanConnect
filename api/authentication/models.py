@@ -34,6 +34,8 @@ class UserModel(AbstractUser):
     email           = models.EmailField(verbose_name="Email", unique=True, max_length=255)
     name            = models.CharField(verbose_name="Name", max_length=255, null=True, blank=True)
     role            = models.CharField(verbose_name="Role", choices=ROLE,max_length=255, null=True, blank=True)
+    is_active       = models.BooleanField(verbose_name="Active", default=True)
+    is_kyc          = models.BooleanField(verbose_name="KYC", default=False)
     objects         = CustomUserManager()
 
     USERNAME_FIELD = 'email'

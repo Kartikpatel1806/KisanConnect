@@ -77,36 +77,36 @@
               <v-card-text>
                 <v-container>
                   <v-virtual-scroll
-                :items="messages_data"
-                item-height="200"
-                height="400"
-              >
-                <template v-slot:default="{ item }">
-                  <div class="pa-10">
-                    <v-textarea
-                      :bench="benched"
-                      :value="item.query"
-                      :label="item.user_name"
-                      outlined
-                      readonly
-                      auto-grow
-                      rows="1"
-                      prepend-icon="mdi-account"
-                    >
-                    </v-textarea>
-                    <v-textarea
-                      :value="item.answer"
-                      label="BOT"
-                      outlined
-                      readonly
-                      auto-grow
-                      rows="2"
-                      prepend-icon="mdi-robot-outline"
-                    >
-                    </v-textarea>
-                  </div>
-                </template>
-              </v-virtual-scroll>
+                    :items="messages_data"
+                    item-height="200"
+                    height="400"
+                  >
+                    <template v-slot:default="{ item }">
+                      <div class="pa-10">
+                        <v-textarea
+                          :bench="benched"
+                          :value="item.query"
+                          :label="item.user_name"
+                          outlined
+                          readonly
+                          auto-grow
+                          rows="1"
+                          prepend-icon="mdi-account"
+                        >
+                        </v-textarea>
+                        <v-textarea
+                          :value="item.answer"
+                          label="BOT"
+                          outlined
+                          readonly
+                          auto-grow
+                          rows="2"
+                          prepend-icon="mdi-robot-outline"
+                        >
+                        </v-textarea>
+                      </div>
+                    </template>
+                  </v-virtual-scroll>
                   <v-row>
                     <v-col>
                       <v-textarea
@@ -140,6 +140,27 @@
           </v-dialog>
         </v-row>
       </template>
+      <template>
+        <v-row justify="center">
+          <v-dialog v-model="kyc_dialog" persistent max-width="600px">
+            <v-card>
+              <v-card-title>
+                <span class="text-h5">Digital KYC</span>
+              </v-card-title>
+              <v-card-text>
+                <div>
+                </div>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="kyc_dialog = false">
+                  Close
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-row>
+      </template>
     </v-container>
   </v-app>
 </template>
@@ -154,6 +175,8 @@ export default {
 
   data: () => ({
     dialog: false,
+    kyc_dialog: false,
+    is_kyc: false,
     question: "",
     token: Vue.$cookies.get("token"),
     message: "",
@@ -176,6 +199,7 @@ export default {
 
   mounted() {
     this.GetMessage();
+    this.Account();
   },
 
   methods: {
@@ -198,7 +222,6 @@ export default {
           this.errored = true;
         });
     },
-
 
     sendMessage() {
       this.SendMessage();
@@ -239,7 +262,31 @@ export default {
           this.errored = true;
         });
     },
-  }
+
+    Account() {
+      axios({
+        method: "GET",
+        url: "http://127.0.0.1:8000/user/",
+        data: JSON.stringify({}),
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+          Authorization: `token ${this.token}`,
+        },
+      })
+        .then((res) => {
+          const users = res.data;
+          const is_kyc = users[0].is_kyc;
+          if (!is_kyc) {
+            this.kyc_dialog = true;
+            console.log(is_kyc, this.kyc_dialog);
+          }
+        })
+        .catch((error) => {
+          alert(error);
+          this.errored = true;
+        });
+    },
+  },
 };
 </script>
 
