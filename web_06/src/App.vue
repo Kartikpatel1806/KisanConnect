@@ -149,6 +149,15 @@
               </v-card-title>
               <v-card-text>
                 <div>
+                  Notes: <br/>
+                  1. Make sure to choose the right camera. <br/>
+                  2. Make sure there is adequate lighting in the background. <br/>
+                  3. Make sure your face is clearly visible. <br/>
+                  4. Make sure the camera does not record multiple faces. <br/>
+                  5. Normal blink eyes while recording video.
+                </div>
+                <div>
+                  <recorderUI :videoTypes="['screen', 'camera']" />
                 </div>
               </v-card-text>
               <v-card-actions>
@@ -168,10 +177,13 @@
 <script>
 import Vue from "vue";
 import axios from "axios";
+import recorderUI from './components/kyc/recorderUI.vue';
 
 export default {
   name: "App",
-  components: {},
+  components: {
+    recorderUI
+  },
 
   data: () => ({
     dialog: false,
@@ -179,6 +191,7 @@ export default {
     is_kyc: false,
     question: "",
     token: Vue.$cookies.get("token"),
+    uid: Vue.$cookies.get("uid"),
     message: "",
     hint: [],
     iconIndex: 0,
@@ -279,6 +292,7 @@ export default {
           if (!is_kyc) {
             this.kyc_dialog = true;
             console.log(is_kyc, this.kyc_dialog);
+            Vue.$cookies.set("uid", users[0].id);
           }
         })
         .catch((error) => {

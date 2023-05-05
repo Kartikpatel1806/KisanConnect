@@ -5,7 +5,8 @@ from rest_framework import status
 from rest_framework import permissions
 from .serializers import *
 from .models import *
-
+from .face_kyc import capture
+import os
 
 
 def passwd_lookup(value):
@@ -73,13 +74,22 @@ class UserView(APIView):
 
     def put(self,request,format=None):
         try:
-            user = UserModel.objects.get(id=request.auth.user.pk)
             request_data = request.data
             user_id = request_data['id']
-            user = UserModel.objects.get(id=user_id)
-            user.is_kyc = True
-            user.delete()
-            return Response("Successfully deleted!", status=status.HTTP_200_OK)
+            file = request_data['file']
+            path = 'C:/Users/Siddharth Gupta/Downloads/'
+            text_files = [f for f in os.listdir(path) if f.endswith('.webm')]
+            if file in text_files:
+                text_files = path + file
+                print(text_files)
+                is_valid, msg = capture(text_files)
+                if is_valid:
+                    user = UserModel.objects.get(id=user_id)
+                    user.is_kyc = True
+                    user.save()
+                    return Response("KYC has been done!", status=status.HTTP_200_OK)
+                return Response(msg, status=status.HTTP_400_BAD_REQUEST)
+            return Response("Something went wrong! please try again later.", status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
         

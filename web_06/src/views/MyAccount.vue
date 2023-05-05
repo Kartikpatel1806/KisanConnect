@@ -21,7 +21,10 @@
             <v-theme-provider dark>
               <div>
                 <p>Email: {{ user.email }}</p>
-                <p>Role: {{ user.role }}</p>
+                <p v-if="user.is_superuser">Role: Admin</p>
+                <p v-else>Role: {{ user.role }}</p>
+                <p v-if="user.is_kyc">KYC Status: Done</p>
+                <p v-else>KYC Status: Not completed yet</p>
               </div>
             </v-theme-provider>
 
