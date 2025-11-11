@@ -9,12 +9,14 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.tree import DecisionTreeClassifier
 import pandas as pd
 import numpy as np
+from pathlib import Path
 
 
 
 def recommendation(t_params,h_params,sm_params,soil_type,crop_type,n_params,p_params,k_params):
     try:
-        data = pd.read_csv('api\\fertilizer_data\\fertilizer_recommendation.csv')
+        csv_path = Path(__file__).resolve().parent / 'fertilizer_recommendation.csv'
+        data = pd.read_csv(str(csv_path))
         le_soil = LabelEncoder()
         data['Soil Type'] = le_soil.fit_transform(data['Soil Type'])
         le_crop = LabelEncoder()

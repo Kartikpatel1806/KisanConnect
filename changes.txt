@@ -1,0 +1,5 @@
+1. farmer login
+2. user login
+3. KYC both
+4. pretrained cahtbot => questions needed
+5. yeild data update

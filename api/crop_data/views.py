@@ -9,12 +9,15 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
 import numpy as np
+from pathlib import Path
 
 
 
 def recommendation(n_params,p_params,k_params,t_params,h_params,ph_params,r_params):
     try:
-        dataset = pd.read_csv('api\crop_data\Crop_recommendation.csv')
+        # Resolve CSV relative to this file to avoid CWD issues
+        csv_path = Path(__file__).resolve().parent / 'Crop_recommendation.csv'
+        dataset = pd.read_csv(str(csv_path))
         X = dataset.iloc[:, :-1].values
         y = dataset.iloc[:, -1].values
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)

@@ -1,7 +1,16 @@
 import numpy as np
 import cv2
-face_cascade = cv2.CascadeClassifier('api\\authentication\\haarcascade_frontalface_default.xml')
-eye_cascade = cv2.CascadeClassifier('api\\authentication\\haarcascade_eye.xml')
+import os
+
+# Get the directory where this file is located
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the paths to the XML files
+face_cascade_path = os.path.join(BASE_DIR, 'haarcascade_frontalface_default.xml')
+eye_cascade_path = os.path.join(BASE_DIR, 'haarcascade_eye.xml')
+
+face_cascade = cv2.CascadeClassifier(face_cascade_path)
+eye_cascade = cv2.CascadeClassifier(eye_cascade_path)
 
 def capture(path):
     try:
@@ -22,7 +31,7 @@ def capture(path):
                         if (eyes & faces).any():
                             result.append(True)
 
-                cv2.imshow('frame', img)
+                # cv2.imshow('frame', img)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
             else:

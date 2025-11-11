@@ -7,6 +7,7 @@ from .serializers import *
 from .models import *
 from .face_kyc import capture
 import os
+from pathlib import Path
 
 
 def passwd_lookup(value):
@@ -74,13 +75,19 @@ class UserView(APIView):
 
     def put(self,request,format=None):
         try:
+            msg = ""
             request_data = request.data
             user_id = request_data['id']
-            file = request_data['file']
-            path = 'C:/Users/Siddharth Gupta/Downloads/'
+            if 'file' not in request_data.keys():
+                return Response("Invalid Filename", status=status.HTTP_400_BAD_REQUEST)
+            _file_ = request_data['file']
+            # Resolve Downloads directory of the current server user dynamically
+            path = str(Path.home() / 'Downloads')
+            if not os.path.isdir(path):
+                return Response("Downloads folder not found on server.", status=status.HTTP_400_BAD_REQUEST)
             text_files = [f for f in os.listdir(path) if f.endswith('.webm')]
-            if file in text_files:
-                text_files = path + file
+            if _file_ in text_files:
+                text_files = os.path.join(path, _file_)
                 print(text_files)
                 is_valid, msg = capture(text_files)
                 if is_valid:
@@ -88,8 +95,7 @@ class UserView(APIView):
                     user.is_kyc = True
                     user.save()
                     return Response("KYC has been done!", status=status.HTTP_200_OK)
-                return Response(msg, status=status.HTTP_400_BAD_REQUEST)
-            return Response("Something went wrong! please try again later.", status=status.HTTP_400_BAD_REQUEST)
+            return Response(msg, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
         

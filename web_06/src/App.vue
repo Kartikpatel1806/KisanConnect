@@ -14,7 +14,7 @@
             />
 
             <v-card-text>
-              <h1 class="appname">Firtilize.io</h1>
+              <h1 class="appname">Fertilizer.io</h1>
             </v-card-text>
           </div>
 
@@ -22,12 +22,14 @@
 
           <div v-if="isDisabled">
             <v-btn to="/" class="ma-1" color="#6495ED"> Home </v-btn>
-            <v-btn to="/crop" class="ma-1" color="#6495ED">
+            <span v-for="user in users" :key=user.id>
+              <v-btn v-if="user.role=='farmer'" to="/crop" class="ma-1" color="#6495ED">
               Crop Recommendation
             </v-btn>
-            <v-btn to="/fertilizer" class="ma-1" color="#6495ED">
+            <v-btn v-if="user.role=='farmer'" to="/fertilizer" class="ma-1" color="#6495ED">
               Fertilizer Recommendation
             </v-btn>
+            </span>
             <v-btn to="/yield" class="ma-1" color="#6495ED"> yield Data </v-btn>
             <v-btn to="/account" class="ma-1" color="#6495ED">
               My Account
@@ -60,8 +62,7 @@
         <div
           class="title font-weight-light grey--text text--lighten-1 text-center"
         >
-          &copy; {{ new Date().getFullYear() }} — Firtilize.io — Made with 💜 by
-          Our Team
+          &copy; {{ new Date().getFullYear() }} — Firtilize.io — Made by Our Team 
         </div>
       </v-footer>
     </div>
@@ -197,6 +198,7 @@ export default {
     iconIndex: 0,
     benched: 0,
     messages_data: null,
+    users: "",
   }),
   computed: {
     isDisabled() {
@@ -211,8 +213,10 @@ export default {
   },
 
   mounted() {
-    this.GetMessage();
-    this.Account();
+    if (Vue.$cookies.isKey("token")){
+      this.GetMessage();
+      this.Account();
+    }
   },
 
   methods: {
@@ -287,6 +291,7 @@ export default {
         },
       })
         .then((res) => {
+          this.users = res.data
           const users = res.data;
           const is_kyc = users[0].is_kyc;
           if (!is_kyc) {

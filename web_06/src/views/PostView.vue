@@ -104,6 +104,30 @@
           </v-dialog>
         </v-row>
       </template>
+      
+      <template>
+        <v-row justify="center">
+          <v-dialog v-model="delete_dialog" persistent max-width="400px">
+            <v-card>
+              <v-card-title class="text-h5">
+                Confirm Delete
+              </v-card-title>
+              <v-card-text>
+                Are you sure you want to delete this yield? This action cannot be undone.
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="grey darken-1" text @click="delete_dialog = false">
+                  Cancel
+                </v-btn>
+                <v-btn color="error darken-1" text @click="DeleteYield()">
+                  Delete
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-row>
+      </template>
     </v-container>
     <v-data-iterator
       :items="items"
@@ -152,10 +176,14 @@
             <v-card>
               <v-card-title class="subheading font-weight-bold justify-center">
                 <img
-                  :src="`http://127.0.0.1:8000/` + item.image"
+                  v-if="item.image"
+                  :src="item.image"
                   height="200"
                   width="200"
+                  style="object-fit: cover;"
+                  alt="Yield Image"
                 />
+                <v-icon v-else size="100" color="grey lighten-1">mdi-image-off</v-icon>
               </v-card-title>
 
               <v-divider></v-divider>
@@ -172,6 +200,18 @@
                     <div v-if="!item.is_sold">
                       <v-btn text color="error" @click="ChatDialog(item.id)">
                         Chat with seller
+                      </v-btn>
+                    </div>
+                    
+                    <div v-if="isOwner(item.user_id)" class="mt-2">
+                      <v-btn 
+                        text 
+                        color="error" 
+                        small
+                        @click="confirmDelete(item.id)"
+                      >
+                        <v-icon small left>mdi-delete</v-icon>
+                        Delete
                       </v-btn>
                     </div>
                   </v-list-item-content>
@@ -260,6 +300,8 @@ export default {
       items: [],
       create_post_dialog: false,
       chat_dialog: false,
+      delete_dialog: false,
+      delete_yield_id: null,
       description: "",
       is_sold: false,
       images: [],
@@ -267,6 +309,7 @@ export default {
       uid: "",
       datas: "",
       role: Vue.$cookies.get("role"),
+      currentUserId: parseInt(Vue.$cookies.get("uid")) || null,
       
     hint: [],
     iconIndex: 0,
@@ -284,8 +327,20 @@ export default {
   },
   mounted() {
     this.Get();
+    // Ensure currentUserId is set from cookies
+    const uid = Vue.$cookies.get("uid");
+    if (uid) {
+      this.currentUserId = parseInt(uid);
+    }
   },
   methods: {
+    isOwner(itemUserId) {
+      if (!this.currentUserId || !itemUserId) {
+        return false;
+      }
+      // Handle both string and number comparisons
+      return parseInt(itemUserId) === parseInt(this.currentUserId);
+    },
     ChatDialog(id) {
       this.uid = id;
       this.chat_dialog = true;
@@ -425,6 +480,43 @@ export default {
     },
     updateItemsPerPage(number) {
       this.itemsPerPage = number;
+    },
+    
+    confirmDelete(yieldId) {
+      this.delete_yield_id = yieldId;
+      this.delete_dialog = true;
+    },
+    
+    DeleteYield() {
+      if (!this.delete_yield_id) {
+        return;
+      }
+      
+      axios({
+        method: "DELETE",
+        url: "http://127.0.0.1:8000/yield/",
+        data: JSON.stringify({
+          id: this.delete_yield_id,
+        }),
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+          Authorization: `token ${this.token}`,
+        },
+      })
+        .then((res) => {
+          console.log(res.data);
+          this.delete_dialog = false;
+          this.delete_yield_id = null;
+          alert("Yield deleted successfully!");
+          window.location.reload();
+        })
+        .catch((error) => {
+          this.delete_dialog = false;
+          this.delete_yield_id = null;
+          const errorMessage = error.response?.data || error.message || "Failed to delete yield";
+          alert(errorMessage);
+          this.errored = true;
+        });
     },
   },
 };
