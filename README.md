@@ -20,11 +20,11 @@ It integrates features like crop prediction, fertilizer recommendation, chatbot 
 
 ### **Frontend**
 - HTML5, CSS3, JavaScript  
-- React.js (for dynamic UI)  
+- Vue.js (for dynamic UI)  
 
 ### **Backend**
-- Node.js with Express.js  
-- RESTful API integration  
+- Django
+- Django RESTful API integration  
 
 ### **Database**
 - MySQL (for storing farmer data, crop details, and chat logs)
